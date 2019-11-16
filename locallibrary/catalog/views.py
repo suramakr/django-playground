@@ -6,6 +6,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from catalog.models import Book, Author, BookInstance, Genre
+from django.views import generic
 
 
 def index(request):
@@ -22,12 +23,48 @@ def index(request):
     # The 'all()' is implied by default.
     num_authors = Author.objects.count()
 
+    num_genres = Genre.objects.all().count()
+
+    num_my_books = Book.objects.filter(title__contains='Seagull').count()
+
     context = {
         'num_books': num_books,
         'num_instances': num_instances,
         'num_instances_available': num_instances_available,
         'num_authors': num_authors,
+        'num_genres': num_genres,
+        'num_my_books': num_my_books
     }
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+
+class BookListView(generic.ListView):
+    model = Book
+    paginate_by = 10
+
+# using generic class-based detail view
+
+
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 10
+
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
+
+class BookDetailView(generic.DetailView):
+    model = Book
+
+# class based view as a function
+
+
+def book_detail_view(request, primary_key):
+    try:
+        book = Book.objects.get(pk=primary_key)
+    except Book.DoesNotExist:
+        raise Http404('Book does not exist')
+
+    return render(request, 'catalog/book_detail.html', context={'book': book})
