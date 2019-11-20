@@ -25,6 +25,10 @@ wheels/
 *.egg
 MANIFEST
 
+
+#Dojo/Javascript Libraries
+bower_components/
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -80,6 +84,9 @@ celerybeat-schedule
 
 # SageMath parsed files
 *.sage.py
+
+#The project-wide django static directory, $STATIC_ROOT, referenced by settings.py, should be not be in source control.
+static/
 
 # Environments
 .env
