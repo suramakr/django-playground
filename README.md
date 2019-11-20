@@ -29,31 +29,31 @@ https://cloud.google.com/python/django/appengine
 
 # glcoud init
 
-gcloud auth login
-gcloud auth application-default login
-gcloud init
+gcloud auth login <br>
+gcloud auth application-default login <br>
+gcloud init <br>
 
 # Cloud proxy
 
 # get connection name
 
-gcloud sql instances describe library
+gcloud sql instances describe library <br>
 
 # run your proxy
 
-gcloud services enable sqladmin
-curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64
-chmod +x cloud_sql_proxy
-./cloud_sql_proxy -instances="library-259506:asia-south1:library"=tcp:3306
+gcloud services enable sqladmin <br>
+curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64 <br>
+chmod +x cloud_sql_proxy <br>
+./cloud_sql_proxy -instances="library-259506:asia-south1:library"=tcp:3306 <br>
 
 # Setup
 
-python manage.py makemigrations
-python manage.py migrate
-python3 manage.py createsuperuser
-pip3 freeze > requirements.txt
-python manage.py collectstatic
+python manage.py makemigrations<br>
+python manage.py migrate<br>
+python3 manage.py createsuperuser<br>
+pip3 freeze > requirements.txt<br>
+python manage.py collectstatic<br>
 
 # Deploy to appengine standard environment
 
-gcloud app deploy
+gcloud app deploy<br>
