@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 # A view is a function that processes an HTTP request, fetches the required data from
@@ -74,3 +75,14 @@ def book_detail_view(request, primary_key):
         raise Http404('Book does not exist')
 
     return render(request, 'catalog/book_detail.html', context={'book': book})
+
+
+class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
+    """Generic class-based view listing books on loan to current user."""
+    model = BookInstance
+    template_name = 'catalog/bookinstance_list_borrowed_user.html'
+    paginate_by = 10
+
+    # restrict our query to just the BookInstance objects for the current user,
+    def get_queryset(self):
+        return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
