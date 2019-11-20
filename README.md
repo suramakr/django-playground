@@ -39,8 +39,9 @@ gcloud init <br>
 
 gcloud sql instances describe library <br>
 
-# run your proxy
+# run your proxy - remember you need postgres drivers
 
+pip3 install psycopg2-binary <br>
 gcloud services enable sqladmin <br>
 curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64 <br>
 chmod +x cloud_sql_proxy <br>
