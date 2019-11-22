@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'q2)pz+qz$4t&!+!n2yw^^l68r6ottwuoehrszu!qfqvemqybjh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['library-259506.appspot.com']
+ALLOWED_HOSTS = ['library-259506.appspot.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
