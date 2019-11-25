@@ -27,22 +27,22 @@ DJANGO_SETTINGS_MODULE=<your_app_name>.settings_dev python3 manage.py runserver
 On a prod machine run as if you just had settings.py and nothing else.
 # glcoud init
 
-gcloud auth login <br>
+gcloud auth login (Ensure you are logged in using credentials for your GCP account) <BR>
 gcloud auth application-default login <br>
 gcloud init <br>
 
-# Cloud proxy
-
-# get connection name
+# Cloud proxy and get connection name
 
 gcloud sql instances describe library <br>
 
-# run your proxy - remember you need postgres drivers
-# Setup if needed for cloud proxy
+# run your proxy 
+# - remember you need postgres drivers - setup if needed for cloud proxy
 pip3 install psycopg2-binary <br>
 gcloud services enable sqladmin <br>
 curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64 <br>
 chmod +x cloud_sql_proxy <br>
+
+# run cloud proxy
 ./cloud_sql_proxy -instances="library-259506:asia-south1:library"=tcp:3306 <br>
 
 # Setup
@@ -64,6 +64,18 @@ https://medium.com/@BennettGarner/deploying-a-django-application-to-google-app-e
 and
 https://cloud.google.com/python/django/appengine
 
-# 2. Running Django in appengine environment
+# 2. Running Django in appengine standard environment
 https://cloud.google.com/python/django/appengine
+
+# 3. good threads for dev vs prod
+https://stackoverflow.com/questions/10664244/django-how-to-manage-development-and-production-settings
+https://stackoverflow.com/questions/1626326/how-to-manage-local-vs-production-settings-in-django
+
+4. https://postgresapp.com/
+
+5. https://postgresapp.com/
+
+6. app.yaml reference
+https://cloud.google.com/appengine/docs/standard/python/config/appref
+
 
