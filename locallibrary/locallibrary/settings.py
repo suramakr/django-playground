@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'q2)pz+qz$4t&!+!n2yw^^l68r6ottwuoehrszu!qfqvemqybjh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['library-259506.appspot.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['library-259506.appspot.com', '127.0.0.1', 'localhost', '*']
 
 
 # Application definition
@@ -85,7 +85,7 @@ if os.getenv('GAE_APPLICATION', None):
             'ENGINE': 'django.db.backends.postgresql',
             'HOST': '/cloudsql/library-259506:asia-south1:library',
             'USER': 'test',
-            'PASSWORD': 'test!$3@',
+            'PASSWORD': 'test123',
             'NAME': 'library',
         }
     }
@@ -93,6 +93,7 @@ if os.getenv('GAE_APPLICATION', None):
 else:
     # Running locally so connect to either a local MySQL instance or connect
     # to Cloud SQL via the proxy.  To start the proxy via command line:
+    # Note 5432 is the default port used for the psql client.
     #    $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
     DATABASES = {
@@ -102,7 +103,7 @@ else:
             'PORT': '3306',
             'NAME': 'library',
             'USER': 'test',
-            'PASSWORD': 'test!$3@',
+            'PASSWORD': 'test123',
         }
     }
 # [END db_setup]
@@ -152,7 +153,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# for AppEngine use STATIC_URL = '/static/'
+# for GKE
+STATIC_URL = 'http://storage.googleapis.com/[YOUR_GCS_BUCKET]/static/'
 STATIC_ROOT = 'static'
 
 
