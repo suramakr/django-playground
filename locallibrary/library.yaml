@@ -1,0 +1,109 @@
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/kubernetes_engine/django_tutorial/polls.yaml
+# The library.yaml file specifies two Kubernetes resources. 
+
+# The first is the Service, which defines a consistent name and private IP address for the Django web app. 
+# The second is an HTTP load balancer with a public-facing external IP address.
+
+# The library frontend replication controller ensures that at least 3
+# instances of the library app are running on the cluster.
+# reference: https://kubernetes.io/docs/concepts/services-networking/service/
+
+# [START kubernetes_deployment]
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: library
+  labels:
+    app: library
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: library
+    spec:
+      containers:
+      - name: library
+        # Replace  with your project ID or use `make template`
+        image: gcr.io/library-259506/library
+        # This setting makes nodes pull the docker image every time before
+        # starting the pod. This is useful when debugging, but should be turned
+        # off in production.
+        imagePullPolicy: Always
+        env:
+            # [START cloudsql_secrets]
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: password
+            # [END cloudsql_secrets]
+        ports:
+        - containerPort: 8080
+
+      # [START proxy_container]
+      - image: gcr.io/cloudsql-docker/gce-proxy:1.16
+        name: cloudsql-proxy
+        command: ["/cloud_sql_proxy", "--dir=/cloudsql", 
+                  "-instances=library-259506:asia-south1:library=tcp:3306",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+      # [START cloudsql_security_context]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+      # [END cloudsql_security_context]      
+        volumeMounts:
+          - name: cloudsql-oauth-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+          - name: cloudsql
+            mountPath: /cloudsql
+            # The “/cloudsql” directory is mounted as a Filesystem in Userspace, or FUSE, by Cloud SQL Proxy
+      # [END proxy_container] 
+      # [START volumes]
+      volumes:
+        - name: cloudsql-oauth-credentials
+          secret:
+            secretName: cloudsql-oauth-credentials
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir:
+      # [END volumes]        
+# [END kubernetes_deployment]
+
+---
+    # [START service]
+    # The library-svc service provides a load-balancing proxy over the polls app
+    # pods. By specifying the type as a 'LoadBalancer', Container Engine will
+    # create an external HTTP load balancer.
+    # The service directs traffic to the deployment by matching the service's selector to the deployment's label
+    #
+    # For more information about external HTTP load balancing see:
+    # https://cloud.google.com/container-engine/docs/load-balancer
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: library-svc
+    spec:
+      type: LoadBalancer
+      ports:
+      - port: 80
+        targetPort: 8080
+      selector:
+        app: library
+
+    # [END service]
+    
+# For more info about Pods see:
+# https://cloud.google.com/container-engine/docs/pods/
+# For more info about Deployments:
+# https://kubernetes.io/docs/user-guide/deployments/
