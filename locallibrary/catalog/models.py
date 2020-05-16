@@ -19,7 +19,7 @@ class Genre(models.Model):
         help_text="Enter a book genre (e.g. Science Fiction, French Poetry etc.)"
     )
 
-    def __str__(self):
+    def __str__(self):  
         """String for representing the Model object (in Admin site etc.)"""
         return self.name
 

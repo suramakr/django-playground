@@ -245,3 +245,6 @@ https://kukulinski.com/10-most-common-reasons-kubernetes-deployments-fail-part-1
 
 8. Kubernetes Cheat Sheet
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/#deleting-resources
+
+9. IF you check in credentials by mistake, how to undo using bfg tool
+https://help.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository
